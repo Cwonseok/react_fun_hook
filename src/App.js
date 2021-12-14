@@ -13,18 +13,34 @@ function App() {
 
 // 함수 방식
 // 값을 넘겨 받기 위해는 약속하였던 값을 넣어주어야 한다
+var funcStyle = 'color:blue';
+var funcId = 0;
 function FuncComp(props) {
 	var numberState = useState(props.initNumber);
 	// initNumber 에 대한 값을 props 가져온다.
 	var number = numberState[0]; // 배열이 가지고 있는 첫번쨰 값이 원하는 state 값이다.
 	var setNumber = numberState[1]; // 상태를 바꾸는 함수
 
+	// var [number, setNumber] = useState(props.initNumber);
+
+	// var dateState = useState((new Date()).toString());
+	// var _date = dateState[0]; // 키워드 일수 있기 떄문에 _ 추가
+	// var setDate = dateState[1];
+
+	var [_date, setDate] = useState(new Date().toString());
+	// 위의 3줄 코드와 똑같이 동작한다.
+
 	console.log('numberState', numberState);
+
+  console.log('%cfunc => render'+(++funcId), funcStyle);
+  // ++ 는 실행할 떄마다 1씩 증가 한다.
+
 	return (
 		<div className='container'>
 			<h2>function style component</h2>
 			{/* <p>Number : {props.initNumber}</p> */}
 			<p>Number : {number}</p>
+			<p>Date : {_date}</p>
 
 			<input
 				type='button'
@@ -32,17 +48,41 @@ function FuncComp(props) {
 				onClick={function () {
 					setNumber(Math.random());
 				}}></input>
+			<input
+				type='button'
+				value='date'
+				onClick={function () {
+					setDate(new Date().toString());
+				}}></input>
 		</div>
 	);
 }
 
 // class 방식
+var classStyle = 'color:red';
 class ClassComp extends React.Component {
 	state = {
 		number: this.props.initNumber,
 		date: new Date().toString(),
 	};
+	componentWillMount() {
+		console.log('%cclass => componentWillMount', classStyle);
+	}
+	componentDidMount() {
+		console.log('%cclass => componentDidMount', classStyle);
+	}
+	shouldComponentUpdate(nextProps, nextState) {
+		console.log('%cclass => shouldComponentUpdate', classStyle);
+		return true;
+	}
+	componentWillUpdate(nextProps, nextState) {
+		console.log('%cclass => componentWillUpdate', classStyle);
+	}
+	componentDidUpdate(nextProps, nextState) {
+		console.log('%cclass => componentDidUpdate', classStyle);
+	}
 	render() {
+		console.log('%cclass => render', classStyle);
 		return (
 			<div className='container'>
 				<h2>class style component</h2>
@@ -67,7 +107,7 @@ class ClassComp extends React.Component {
 					type='button'
 					value='date'
 					onClick={function () {
-						this.setState({ date: new Date().toString });
+						this.setState({ date: new Date().toString() });
 					}.bind(this)}></input>
 			</div>
 		);
